@@ -12,8 +12,8 @@ class WallTestSuite {
     void testFindBlockByColor() {
         // Given
         Wall wall = new Wall();
-        Block block1 = new BlockImp("red", "brick");
-        Block block2 = new BlockImp("blue", "wood");
+        Block block1 = new BlockImpl("red", "brick");
+        Block block2 = new BlockImpl("blue", "wood");
         CompositeBlock compositeBlock = new CompositeBlockImpl(Arrays.asList(block1, block2));
         wall.addCompositeBlock(compositeBlock);
 
@@ -33,9 +33,9 @@ class WallTestSuite {
     void testFindBlocksByMaterial() {
         // Given
         Wall wall = new Wall();
-        Block block1 = new BlockImp("blue", "brick");
-        Block block2 = new BlockImp("green", "wood");
-        Block block3 = new BlockImp("red", "brick");
+        Block block1 = new BlockImpl("blue", "brick");
+        Block block2 = new BlockImpl("green", "wood");
+        Block block3 = new BlockImpl("red", "brick");
         CompositeBlock compositeBlock = new CompositeBlockImpl(Arrays.asList(block1, block2));
         wall.addCompositeBlock(compositeBlock);
         wall.addBlock(block3);
@@ -56,12 +56,12 @@ class WallTestSuite {
     void testCount() {
         // Given
         Wall wall = new Wall();
-        Block simpleBlock = new BlockImp("yellow", "stone");
+        Block simpleBlock = new BlockImpl("yellow", "stone");
         wall.addBlock(simpleBlock);
 
         CompositeBlock compositeBlock = new CompositeBlockImpl(Arrays.asList(
-                new BlockImp("green", "wood"),
-                new BlockImp("blue", "wood")
+                new BlockImpl("green", "wood"),
+                new BlockImpl("blue", "wood")
         ));
         wall.addCompositeBlock(compositeBlock);
 
@@ -73,11 +73,11 @@ class WallTestSuite {
     }
 
     // Implementation Block
-    static class BlockImp implements Block {
+    static class BlockImpl implements Block {
         private final String color;
         private final String material;
 
-        public BlockImp(String color, String material) {
+        public BlockImpl(String color, String material) {
             this.color = color;
             this.material = material;
         }
@@ -108,12 +108,30 @@ class WallTestSuite {
 
         @Override
         public String getColor() {
-            throw new UnsupportedOperationException("Not needed for testing");
+            List<String> colors = blocks.stream()
+                    .map(Block::getColor)
+                    .distinct()
+                    .toList();
+
+            if (colors.size() == 1) {
+                return colors.get(0);
+            } else {
+                return "Multiple colors";
+            }
         }
 
         @Override
         public String getMaterial() {
-            throw new UnsupportedOperationException("Not needed for testing");
+            List<String> materials = blocks.stream()
+                    .map(Block::getMaterial)
+                    .distinct()
+                    .toList();
+
+            if (materials.size() == 1) {
+                return materials.get(0);
+            } else {
+                return "Multiple materials";
+            }
         }
     }
 }
